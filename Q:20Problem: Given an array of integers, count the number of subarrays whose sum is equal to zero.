@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct {
+    int key;
+    int value;
+} Hash;
+
+int countZeroSumSubarrays(int* nums, int numsSize) {
+    int count = 0;
+    int prefixSum = 0;
+
+    Hash hash[10000];
+    int hashSize = 0;
+
+    hash[hashSize].key = 0;
+    hash[hashSize].value = 1;
+    hashSize++;
+
+    for (int i = 0; i < numsSize; i++) {
+        prefixSum += nums[i];
+
+        int found = 0;
+
+        for (int j = 0; j < hashSize; j++) {
+            if (hash[j].key == prefixSum) {
+                count += hash[j].value;
+                hash[j].value++;
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found) {
+            hash[hashSize].key = prefixSum;
+            hash[hashSize].value = 1;
+            hashSize++;
+        }
+    }
+
+    return count;
+}
