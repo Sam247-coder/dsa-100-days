@@ -1,0 +1,11 @@
+int countNodes(struct ListNode* head) {
+    int count = 0;
+    struct ListNode* temp = head;
+
+    while (temp != NULL) {
+        count++;
+        temp = temp->next;
+    }
+
+    return count;
+}
