@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* prev;
+    struct Node* next;
+} Node;
+
+Node* head = NULL;
+
+/* Insert at Beginning */
+void insertAtBeginning(int value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = head;
+
+    if (head != NULL)
+        head->prev = newNode;
+
+    head = newNode;
+}
+
+/* Insert at End */
+void insertAtEnd(int value) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = value;
+    newNode->next = NULL;
+
+    if (head == NULL) {
+        newNode->prev = NULL;
+        head = newNode;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    temp->next = newNode;
+    newNode->prev = temp;
+}
+
+/* Traverse Forward */
+void traverseForward() {
+    Node* temp = head;
+    printf("Forward: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+/* Traverse Backward */
+void traverseBackward() {
+    Node* temp = head;
+
+    if (temp == NULL)
+        return;
+
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    printf("Backward: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->prev;
+    }
+    printf("\n");
+}
+
+int main() {
+    insertAtBeginning(10);
+    insertAtBeginning(5);
+    insertAtEnd(20);
+    insertAtEnd(30);
+
+    traverseForward();
+    traverseBackward();
+
+    return 0;
+}
