@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* rotateRight(struct Node* head, int k) {
+    if (head == NULL || head->next == NULL || k == 0)
+        return head;
+
+    struct Node* temp = head;
+    int length = 1;
+
+    // Find length
+    while (temp->next != NULL) {
+        temp = temp->next;
+        length++;
+    }
+
+    // Connect last node to head (make circular)
+    temp->next = head;
+
+    k = k % length;
+
+    if (k == 0) {
+        temp->next = NULL;
+        return head;
+    }
+
+    int steps = length - k;
+    struct Node* newTail = head;
+
+    for (int i = 1; i < steps; i++) {
+        newTail = newTail->next;
+    }
+
+    struct Node* newHead = newTail->next;
+    newTail->next = NULL;
+
+    return newHead;
+}
