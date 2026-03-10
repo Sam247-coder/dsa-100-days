@@ -1,0 +1,47 @@
+#include <stdio.h>
+#define MAX 5
+
+int deque[MAX];
+int front = -1, rear = -1;
+
+void insertFront(int x) {
+    if(front == 0) {
+        printf("Overflow\n");
+        return;
+    }
+    if(front == -1) {
+        front = rear = 0;
+    }
+    else {
+        front--;
+    }
+    deque[front] = x;
+}
+
+void insertRear(int x) {
+    if(rear == MAX-1) {
+        printf("Overflow\n");
+        return;
+    }
+    if(front == -1) {
+        front = rear = 0;
+    }
+    else {
+        rear++;
+    }
+    deque[rear] = x;
+}
+
+void display() {
+    for(int i = front; i <= rear; i++) {
+        printf("%d ", deque[i]);
+    }
+}
+
+int main() {
+    insertRear(10);
+    insertFront(5);
+    insertRear(20);
+
+    display();
+}
