@@ -1,0 +1,24 @@
+int countLeafNodes(struct TreeNode* root) {
+    if (!root) return 0;
+
+    struct TreeNode* stack[1000];
+    int top = -1;
+    stack[++top] = root;
+
+    int count = 0;
+
+    while (top >= 0) {
+        struct TreeNode* node = stack[top--];
+
+        if (node->left == NULL && node->right == NULL)
+            count++;
+
+        if (node->left)
+            stack[++top] = node->left;
+
+        if (node->right)
+            stack[++top] = node->right;
+    }
+
+    return count;
+}
