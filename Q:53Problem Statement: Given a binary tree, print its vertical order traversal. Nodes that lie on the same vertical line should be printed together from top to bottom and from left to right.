@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Tree Node
+struct TreeNode {
+    int val;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Queue Node
+struct QNode {
+    struct TreeNode* node;
+    int hd;
+};
+
+// Function for vertical order traversal
+void verticalOrder(struct TreeNode* root) {
+    if (root == NULL) return;
+
+    struct QNode queue[2000];
+    int front = 0, rear = 0;
+
+    // Map: HD -> array of values
+    int map[4000][200];   // assuming safe limits
+    int count[4000] = {0};
+
+    int offset = 2000; // to handle negative HD
+    int minHD = 0, maxHD = 0;
+
+    // push root
+    queue[rear++] = (struct QNode){root, 0};
+
+    while (front < rear) {
+        struct QNode temp = queue[front++];
+        struct TreeNode* node = temp.node;
+        int hd = temp.hd;
+
+        // store value
+        map[hd + offset][count[hd + offset]++] = node->val;
+
+        if (hd < minHD) minHD = hd;
+        if (hd > maxHD) maxHD = hd;
+
+        if (node->left)
+            queue[rear++] = (struct QNode){node->left, hd - 1};
+
+        if (node->right)
+            queue[rear++] = (struct QNode){node->right, hd + 1};
+    }
+
+    // print result
+    for (int i = minHD; i <= maxHD; i++) {
+        for (int j = 0; j < count[i + offset]; j++) {
+            printf("%d ", map[i + offset][j]);
+        }
+        printf("\n");
+    }
+}
