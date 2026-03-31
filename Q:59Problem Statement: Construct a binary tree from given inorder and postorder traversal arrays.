@@ -1,0 +1,53 @@
+#include <stdlib.h>
+
+// Tree node
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Create node
+struct TreeNode* newNode(int val) {
+    struct TreeNode* node = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    node->val = val;
+    node->left = node->right = NULL;
+    return node;
+}
+
+// Helper function
+struct TreeNode* build(int* inorder, int inStart, int inEnd,
+                       int* postorder, int postStart, int postEnd) {
+
+    if (inStart > inEnd) return NULL;
+
+    int rootVal = postorder[postEnd];
+    struct TreeNode* root = newNode(rootVal);
+
+    // Find index in inorder
+    int index;
+    for (index = inStart; index <= inEnd; index++) {
+        if (inorder[index] == rootVal)
+            break;
+    }
+
+    int leftSize = index - inStart;
+
+    // Left subtree
+    root->left = build(inorder, inStart, index - 1,
+                       postorder, postStart, postStart + leftSize - 1);
+
+    // Right subtree
+    root->right = build(inorder, index + 1, inEnd,
+                        postorder, postStart + leftSize, postEnd - 1);
+
+    return root;
+}
+
+// Main function
+struct TreeNode* buildTree(int* inorder, int inorderSize,
+                           int* postorder, int postorderSize) {
+
+    return build(inorder, 0, inorderSize - 1,
+                 postorder, 0, postorderSize - 1);
+}
