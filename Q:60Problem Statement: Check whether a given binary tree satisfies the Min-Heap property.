@@ -1,0 +1,58 @@
+#include <stdbool.h>
+#include <stdlib.h>
+
+/**
+ * Definition for a binary tree node.
+ */
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+// Step 1: Count nodes
+int countNodes(struct TreeNode* root) {
+    if (root == NULL)
+        return 0;
+    return 1 + countNodes(root->left) + countNodes(root->right);
+}
+
+// Step 2: Check Complete Binary Tree
+bool isCBT(struct TreeNode* root, int index, int totalNodes) {
+    if (root == NULL)
+        return true;
+
+    if (index >= totalNodes)
+        return false;
+
+    return isCBT(root->left, 2 * index + 1, totalNodes) &&
+           isCBT(root->right, 2 * index + 2, totalNodes);
+}
+
+// Step 3: Check Min-Heap property
+bool isMinHeap(struct TreeNode* root) {
+    // Leaf node
+    if (root->left == NULL && root->right == NULL)
+        return true;
+
+    // Only left child
+    if (root->right == NULL)
+        return (root->val <= root->left->val) &&
+               isMinHeap(root->left);
+
+    // Both children exist
+    return (root->val <= root->left->val &&
+            root->val <= root->right->val) &&
+           isMinHeap(root->left) &&
+           isMinHeap(root->right);
+}
+
+// Main function
+bool isHeap(struct TreeNode* root) {
+    int totalNodes = countNodes(root);
+    
+    if (isCBT(root, 0, totalNodes) && isMinHeap(root))
+        return true;
+    
+    return false;
+}
