@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+int main() {
+    int n, m;
+    printf("Enter number of vertices and edges: ");
+    scanf("%d %d", &n, &m);
+
+    int adj[100][100] = {0};  // adjacency matrix initialized with 0
+
+    int u, v;
+
+    printf("Enter edges (u v):\n");
+    for (int i = 0; i < m; i++) {
+        scanf("%d %d", &u, &v);
+
+        // Undirected graph
+        adj[u][v] = 1;
+        adj[v][u] = 1;
+
+        // For directed graph, use only:
+        // adj[u][v] = 1;
+    }
+
+    // Print adjacency matrix
+    printf("\nAdjacency Matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%d ", adj[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
