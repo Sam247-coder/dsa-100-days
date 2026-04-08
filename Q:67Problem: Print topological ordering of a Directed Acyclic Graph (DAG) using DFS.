@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void dfs(int node, int** adj, int* adjSize, int* visited, int* stack, int* top) {
+    visited[node] = 1;
+
+    for(int i = 0; i < adjSize[node]; i++) {
+        int neighbor = adj[node][i];
+        if(!visited[neighbor]) {
+            dfs(neighbor, adj, adjSize, visited, stack, top);
+        }
+    }
+
+    // Push after visiting neighbors
+    stack[(*top)++] = node;
+}
+
+void topologicalSort(int V, int** edges, int E) {
+    
+    // Step 1: Build adjacency list
+    int** adj = (int**)malloc(V * sizeof(int*));
+    int* adjSize = (int*)calloc(V, sizeof(int));
+
+    for(int i = 0; i < V; i++) {
+        adj[i] = (int*)malloc(V * sizeof(int));
+    }
+
+    for(int i = 0; i < E; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        adj[u][adjSize[u]++] = v;  // u -> v
+    }
+
+    // Step 2: Visited array
+    int* visited = (int*)calloc(V, sizeof(int));
+
+    // Stack
+    int* stack = (int*)malloc(V * sizeof(int));
+    int top = 0;
+
+    // Step 3: DFS for all nodes
+    for(int i = 0; i < V; i++) {
+        if(!visited[i]) {
+            dfs(i, adj, adjSize, visited, stack, &top);
+        }
+    }
+
+    // Step 4: Print result (reverse of stack)
+    printf("Topological Order: ");
+    for(int i = top - 1; i >= 0; i--) {
+        printf("%d ", stack[i]);
+    }
+    printf("\n");
+}
