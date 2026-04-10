@@ -1,0 +1,84 @@
+#include <limits.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+typedef struct {
+    int node, dist;
+} Node;
+
+typedef struct {
+    Node heap[10000];
+    int size;
+} MinHeap;
+
+void swap(Node* a, Node* b) {
+    Node temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void heapifyUp(MinHeap* h, int i) {
+    while (i > 0 && h->heap[(i-1)/2].dist > h->heap[i].dist) {
+        swap(&h->heap[(i-1)/2], &h->heap[i]);
+        i = (i-1)/2;
+    }
+}
+
+void heapifyDown(MinHeap* h, int i) {
+    int smallest = i;
+    int l = 2*i+1, r = 2*i+2;
+    
+    if (l < h->size && h->heap[l].dist < h->heap[smallest].dist)
+        smallest = l;
+    if (r < h->size && h->heap[r].dist < h->heap[smallest].dist)
+        smallest = r;
+    
+    if (smallest != i) {
+        swap(&h->heap[i], &h->heap[smallest]);
+        heapifyDown(h, smallest);
+    }
+}
+
+void push(MinHeap* h, int node, int dist) {
+    h->heap[h->size] = (Node){node, dist};
+    h->size++;
+    heapifyUp(h, h->size - 1);
+}
+
+Node pop(MinHeap* h) {
+    Node root = h->heap[0];
+    h->heap[0] = h->heap[--h->size];
+    heapifyDown(h, 0);
+    return root;
+}
+
+// adj: adjacency matrix (use -1 if no edge)
+void dijkstra(int V, int adj[MAX][MAX], int src, int dist[]) {
+    
+    for (int i = 0; i < V; i++)
+        dist[i] = INT_MAX;
+    
+    dist[src] = 0;
+    
+    MinHeap h = { .size = 0 };
+    push(&h, src, 0);
+    
+    while (h.size > 0) {
+        Node cur = pop(&h);
+        int u = cur.node;
+        
+        if (cur.dist > dist[u]) continue;
+        
+        for (int v = 0; v < V; v++) {
+            if (adj[u][v] != -1) {
+                int newDist = dist[u] + adj[u][v];
+                
+                if (newDist < dist[v]) {
+                    dist[v] = newDist;
+                    push(&h, v, newDist);
+                }
+            }
+        }
+    }
+}
