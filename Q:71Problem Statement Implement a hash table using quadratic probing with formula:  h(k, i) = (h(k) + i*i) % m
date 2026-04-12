@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define EMPTY -1
+
+// Insert function using quadratic probing
+void insert(int hashTable[], int m, int key) {
+    int i = 0;
+    int index;
+
+    while (i < m) {
+        index = (key % m + i * i) % m;
+
+        if (hashTable[index] == EMPTY) {
+            hashTable[index] = key;
+            return;
+        }
+        i++;
+    }
+
+    printf("Hash table is full, cannot insert %d\n", key);
+}
+
+// Display hash table
+void display(int hashTable[], int m) {
+    for (int i = 0; i < m; i++) {
+        if (hashTable[i] == EMPTY)
+            printf("Index %d: EMPTY\n", i);
+        else
+            printf("Index %d: %d\n", i, hashTable[i]);
+    }
+}
+
+int main() {
+    int m = 10;
+    int hashTable[10];
+
+    // Initialize table
+    for (int i = 0; i < m; i++) {
+        hashTable[i] = EMPTY;
+    }
+
+    // Insert elements
+    insert(hashTable, m, 23);
+    insert(hashTable, m, 43);
+    insert(hashTable, m, 13);
+    insert(hashTable, m, 27);
+
+    // Display table
+    display(hashTable, m);
+
+    return 0;
+}
