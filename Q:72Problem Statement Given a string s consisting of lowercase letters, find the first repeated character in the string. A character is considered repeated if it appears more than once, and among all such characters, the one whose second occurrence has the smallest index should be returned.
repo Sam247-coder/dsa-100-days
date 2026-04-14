@@ -1,0 +1,15 @@
+class Solution {
+public:
+    char firstRepChar(string s) {
+        unordered_set<char> seen;
+
+        for (char ch : s) {
+            if (seen.count(ch)) {
+                return ch;  // first repeated character
+            }
+            seen.insert(ch);
+        }
+
+        return '#'; // if no repeated character
+    }
+};
